@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pet Adoption</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f8f9fa;
+        color: #333;
+    }
+    header {
+        background: #ff6f61;
+        color: white;
+        padding: 15px;
+        text-align: center;
+        font-size: 1.5rem;
+    }
+    .container {
+        max-width: 900px;
+        margin: auto;
+        padding: 20px;
+    }
+    .pet-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        padding: 15px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+    button {
+        background: #ff6f61;
+        border: none;
+        padding: 10px 15px;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #e65a50;
+    }
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+</style>
+</head>
+<body>
+
+<header>🐾 Pet Adoption Center 🐾</header>
+<div class="container" id="app"></div>
+
+<script>
+const pets = [
+    {id:1, name:"Buddy", type:"Dog", age:"2 years", breed:"Golden Retriever", fact:"Loves swimming!", img:"https://placedog.net/400/300?id=1"},
+    {id:2, name:"Mittens", type:"Cat", age:"1 year", breed:"Persian", fact:"Sleeps 16 hours a day!", img:"https://placekitten.com/400/300"},
+    {id:3, name:"Charlie", type:"Dog", age:"3 years", breed:"Beagle", fact:"Can sniff out treats anywhere!", img:"https://placedog.net/400/300?id=2"}
+];
+
+const randomFacts = [
+    "Dogs can learn over 100 words!",
+    "Cats can jump up to six times their length.",
+    "Beagles have one of the best noses in the animal kingdom.",
+    "Golden Retrievers are great therapy dogs."
+];
+
+let selectedPet = null;
+
+function showHomePage(){
+    let html = "<h2>Available Pets for Adoption</h2>";
+    pets.forEach(pet => {
+        html += `
+        <div class="pet-card">
+            <img src="${pet.img}" alt="${pet.name}">
+            <h3>${pet.name}</h3>
+            <p>Type: ${pet.type}</p>
+            <button onclick="showPetDetails(${pet.id})">View Details</button>
+        </div>`;
+    });
+    document.getElementById("app").innerHTML = html;
+}
+
+function showPetDetails(id){
+    selectedPet = pets.find(p => p.id === id);
+    document.getElementById("app").innerHTML = `
+        <div class="pet-card">
+            <img src="${selectedPet.img}" alt="${selectedPet.name}">
+            <h2>${selectedPet.name}</h2>
+            <p><b>Age:</b> ${selectedPet.age}</p>
+            <p><b>Breed:</b> ${selectedPet.breed}</p>
+            <p><b>Fun Fact:</b> ${selectedPet.fact}</p>
+            <button onclick="showAdoptionForm()">Adopt Me</button>
+            <br><br>
+            <button onclick="showHomePage()">⬅ Back</button>
+        </div>
+    `;
+}
+
+function showAdoptionForm(){
+    document.getElementById("app").innerHTML = `
+        <h2>Adopt ${selectedPet.name}</h2>
+        <form onsubmit="submitForm(event)">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="reason" placeholder="Reason for adoption" required></textarea>
+            <button type="submit">Submit Adoption Request</button>
+        </form>
+        <br>
+        <button onclick="showPetDetails(${selectedPet.id})">⬅ Back</button>
+    `;
+}
+
+function submitForm(e){
+    e.preventDefault();
+    const applicantName = document.getElementById("name").value;
+    const requestNumber = Math.floor(Math.random()*100000);
+    const fact = randomFacts[Math.floor(Math.random()*randomFacts.length)];
+    
+    document.getElementById("app").innerHTML = `
+        <div class="pet-card">
+            <h2>🎉 Adoption Request Submitted 🎉</h2>
+            <p><b>Pet Name:</b> ${selectedPet.name}</p>
+            <p><b>Applicant Name:</b> ${applicantName}</p>
+            <p><b>Request Number:</b> #${requestNumber}</p>
+            <p><b>Did You Know?</b> ${fact}</p>
+            <button onclick="showHomePage()">Go to Home</button>
+        </div>
+    `;
+}
+
+showHomePage();
+</script>
+</body>
+</html>
